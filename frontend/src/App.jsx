@@ -24,6 +24,20 @@ export default function App() {
   const [logado, setLogado] = useState(Boolean(getToken()));
   const [pag, setPag] = useState({ id: 'painel', params: {} });
   const [menu, setMenu] = useState(false);
+  const [tema, setTema] = useState(() => {
+  return localStorage.getItem("tema-cavalo-bike") || "escuro";
+});
+
+function alternarTema() {
+  const novoTema = tema === "escuro" ? "claro" : "escuro";
+
+  setTema(novoTema);
+  localStorage.setItem("tema-cavalo-bike", novoTema);
+  document.documentElement.setAttribute("data-tema", novoTema);
+}
+useEffect(() => {
+  document.documentElement.setAttribute("data-tema", tema);
+}, [tema]);
 
   useEffect(() => {
     const sair = () => setLogado(false);
@@ -52,6 +66,9 @@ export default function App() {
               <span aria-hidden="true">{p.icone}</span> {p.nome}
             </button>
           ))}
+          <button onClick={alternarTema}>
+           {tema === "escuro" ? "☀️ Tema claro" : "🌙 Tema escuro"}
+            </button>
           <button className="sair" onClick={() => { setToken(null); setLogado(false); }}>⎋ Sair</button>
         </nav>
         {menu && <div className="fundo-menu" onClick={() => setMenu(false)} />}
